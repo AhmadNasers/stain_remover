@@ -9,7 +9,11 @@ import cv2
 import numpy as np
 import os
 from picamera2 import Picamera2
+import serial 
+import time 
 
+motion = serial.Serial('/dev/ttyUSB0',9600,timeout=0.1)
+# cleaner = serial.Serial('/dev/ttyUSB1',9600,timeout=0.1)
 
 class RectangleSelector:
     def __init__(self):
@@ -63,6 +67,17 @@ class RectangleSelector:
         if self.H is None:
             print("Warning: Homography could not be computed. Check img_pts/step_pts.")
 
+
+    def send_and_wait(self, ser, cmd, timeout=10):
+
+        ser.reset_input_buffer()
+        ser.write((cmd+"\n").encode())
+        start_time = time.time()
+
+        while True :
+                line = ser.readline().decode(errors="ignore").strip()
+                if line == "done":
+                    return True   
 
     def approximated_point(self, x, y):
         """
@@ -490,7 +505,13 @@ class RectangleSelector:
                         print("=" * 60)
                         print(f"Top-Left:     ({int(min_x)}, {int(min_y)})")
                         print(f"Bottom-Right: ({int(max_x)}, {int(max_y)})")
-                         
+                        self.send_and_wait(motion, f"x {br_steps[0]} {br_steps[1]}")
+                        self.send_and_wait(motion, f"c {br_steps[0] - tl_steps[0]} {br_steps[1] - tl_steps[1]}")
+
+                        
+
+
+
                     else:
                         print("No rectangle created yet. Draw a rectangle first, then press 'S'.")
 
