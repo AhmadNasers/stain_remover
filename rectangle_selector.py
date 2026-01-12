@@ -489,11 +489,8 @@ class RectangleSelector:
                         print("\nPIXEL RECTANGLE COORDINATES:")
                         print("=" * 60)
                         print(f"Top-Left:     ({int(min_x)}, {int(min_y)})")
-                        print(f"Top-Right:    ({int(max_x)}, {int(min_y)})")
                         print(f"Bottom-Right: ({int(max_x)}, {int(max_y)})")
-                        print(f"Bottom-Left:  ({int(min_x)}, {int(max_y)})")
-                        print(f"\nDimensions: {int(max_x - min_x)}px × {int(max_y - min_y)}px")
-                        print("=" * 60)
+                         
                     else:
                         print("No rectangle created yet. Draw a rectangle first, then press 'S'.")
 
